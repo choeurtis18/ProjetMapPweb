@@ -1,0 +1,25 @@
+h1{
+    text-align: center;
+    margin: 2%;
+    font-size: 50px;
+}
+
+#map path{
+    fill: #000000;
+    stroke: #FFFFFF;
+    stroke-width: 1px;
+    transition: fill 0.3s;
+}
+
+#map path:hover{
+    fill: #FF0000;
+    stroke: #FFFFFF;
+    stroke-width: 1px;
+    transition: fill 0.3s;
+}
+
+#map .select_land_coloration{
+    fill: #0000FF;
+    color: #0000FF;
+}
+
