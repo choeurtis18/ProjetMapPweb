@@ -140,6 +140,7 @@ $(document).ready(function(){
     
     ////////////// FIND REGION POSITION //////////////
     function gameTwo() {
+        let gameEnd = false;
         let regions = getAllRegion();//Select all country 
         let regionID = getRandomInt(regions.length);//Random number
 
@@ -156,9 +157,44 @@ $(document).ready(function(){
         divGameInformation.innerHTML = codeHTML ;
         
         let regionMisterySpan = document.getElementById("select_region_name");//Name of the country
-        //////////////////////////////////
-
         
+        //////////////////////////////////
+        let i = 0;
+        for(i = 0; i < regions.length; i++){
+            regions[i].addEventListener("click", function() {
+                regionName = regions[i].id;
+                //console.log(regionName);
+                
+                if(regionName == regionMisterySpan.innerHTML){
+                    console.log("well done");
+                    window.alert("well done c'est bien " + regionMisterySpan.innerHTML);
+                    regions.splice(regionID, 1);    
+                    points++;
+                    gameEnd = true;
+                }
+                else{
+                    console.log("Et merde");
+                    window.alert("Et merde ça c'est " + regionName);
+                    gameEnd = true;
+                }
+                console.log("Valeur : " + i);
+                if (gameEnd == true && i >= regions.length){          
+                    restarGameTwo(gameEnd)
+                }
+            })
+        }
+    }
+
+    function restarGameTwo(gameEnd) {
+        if(points < 5 && gameEnd == true) {
+            console.log(gameEnd);
+            console.log(points);
+            console.log("ok"); 
+            return gameTwo();
+        } 
+    }
+    ///////////// PARCOURIR LES REGIONS //////////////
+    function parcoursRegion(regions, regionMisterySpan, regionID) {
         regions.forEach(region => {
             region.addEventListener("click", function(){
                 regionName = region.id;
@@ -169,15 +205,14 @@ $(document).ready(function(){
                     console.log("well done");
                     window.alert("well done c'est bien " + regionMisterySpan.innerHTML);
                     regions.splice(regionID, 1);
-                    
-                    
-                    gameTwo();
+                     
+                    return gameTwo();
                     points++;
                 }else{
                     console.log("Et merde");
                     window.alert("Et merde ça c'est " + regionName);
 
-                     gameTwo();
+                    return gameTwo();
                     points++;
                 }
             })
