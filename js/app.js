@@ -1,6 +1,8 @@
 $(document).ready(function(){
     /* initialisation de la fonction initmap */
     var map;
+    var activePopup = false;
+    var points = 0;
 
     function initmapV3(){
         map = L.map('map').setView([47.0, 3.0], 6);
@@ -83,8 +85,7 @@ $(document).ready(function(){
     function getRegion(regionTab, idRegion){
         return regionTab[idRegion];
     }
-
-    let points = 0;
+   
     ////////////// FIND REGION'S NAME //////////////
     function gameOne() {
         let regions = getAllRegion();//Select all country 
@@ -120,6 +121,10 @@ $(document).ready(function(){
                 regions.splice(regionID, 1);
                 regionMistery.classList.remove("select_land_coloration");
                 
+                //Active popub avec les info de la region
+                activePopup = true;
+                addPopup(regionMisteryName);
+                
                 if(points < 5) {
                     gameOne();
                     points++;
@@ -132,7 +137,7 @@ $(document).ready(function(){
                     gameOne();
                 }
             }
-            if (poits >= 5) {
+            if (points >= 5) {
                 points = 0;
             }
         })
@@ -140,6 +145,7 @@ $(document).ready(function(){
     
     ////////////// FIND REGION POSITION //////////////
     function gameTwo() {
+        let gameEnd = false;
         let regions = getAllRegion();//Select all country 
         let regionID = getRandomInt(regions.length);//Random number
 
@@ -156,9 +162,50 @@ $(document).ready(function(){
         divGameInformation.innerHTML = codeHTML ;
         
         let regionMisterySpan = document.getElementById("select_region_name");//Name of the country
-        //////////////////////////////////
-
         
+        //////////////////////////////////
+        let i = 0;
+        for(i = 0; i < regions.length; i++){
+            regions[i].addEventListener("click", function() {
+                regionName = regions[i].id;
+                //console.log(regionName);
+                
+                if(regionName == regionMisterySpan.innerHTML){
+                    console.log("well done");
+                    window.alert("well done c'est bien " + regionMisterySpan.innerHTML);
+                    regions.splice(regionID, 1);    
+                    points++;
+
+                    //Active popub avec les info de la region
+                    activePopup = true;
+                    addPopup(regionMisteryName);
+
+                    gameEnd = true;
+                }
+                else{
+                    console.log("Et merde");
+                    window.alert("Et merde ça c'est " + regionName);
+                    gameEnd = true;
+                }
+                console.log("Valeur : " + i);
+                if (gameEnd == true && i >= regions.length){          
+                    restarGameTwo(gameEnd)
+                }
+            })
+        }
+    }
+
+    function restarGameTwo(gameEnd) {
+        if(points < 5 && gameEnd == true) {
+            console.log(gameEnd);
+            console.log(points);
+            console.log("ok"); 
+            return gameTwo();
+        } 
+    }
+    
+    ///////////// PARCOURIR LES REGIONS //////////////
+    function parcoursRegion(regions, regionMisterySpan, regionID) {
         regions.forEach(region => {
             region.addEventListener("click", function(){
                 regionName = region.id;
@@ -169,21 +216,49 @@ $(document).ready(function(){
                     console.log("well done");
                     window.alert("well done c'est bien " + regionMisterySpan.innerHTML);
                     regions.splice(regionID, 1);
-                    
-                    
-                    gameTwo();
+                     
+                    return gameTwo();
                     points++;
                 }else{
                     console.log("Et merde");
                     window.alert("Et merde ça c'est " + regionName);
 
-                     gameTwo();
+                    return gameTwo();
                     points++;
                 }
             })
         })
     }
-/////////////////////////////////////////////////////////////////////////////////////////////
+
+    ///////////// create popup ///////////// 
+    function addPopup(idRegion) {
+        // Get the popup
+        let popup = document.getElementById("myPopup");
+
+        // Get the button that opens the popup
+        let btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the popup
+        var spanClose = document.getElementsByClassName("popup-close")[0];
+
+        // When the user clicks the button, open the popup 
+        if(activePopup == true) {
+            popup.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the popup
+        spanClose.onclick = function() {
+            popup.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the popup, close it
+        window.onclick = function(event) {
+            if (event.target == popup) {
+                popup.style.display = "none";
+            }
+        }
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////
     
 
     let url =  window.location.href;
