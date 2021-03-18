@@ -3,6 +3,9 @@ $(document).ready(function(){
     var map;
     var activePopup = false;
     var points = 0;
+    let regions;//Select all country 
+
+    let regionMisteryName;
 
     function initmapV3(){
         map = L.map('map').setView([47.0, 3.0], 6);
@@ -143,28 +146,74 @@ $(document).ready(function(){
         })
     }
     
+    function loadGame() {
+        regions = getAllRegion();
+        initListenerRegion();
+        gameTwo();
+    }
+
     ////////////// FIND REGION POSITION //////////////
     function gameTwo() {
-        let gameEnd = false;
-        let regions = getAllRegion();//Select all country 
         let regionID = getRandomInt(regions.length);//Random number
 
         //Selected country informations
-        let regionMistery = getRegion(regions, regionID);
-        let regionMisteryName = regionMistery.id;
+        let regionMistery = regions[regionID];
+        regionMisteryName = regionMistery.id;
 
         /////// Game information ///////
         var codeHTML;
         codeHTML =  '<h3 id="region_question">Where is this region ?</h3>' +
                     '<span id="select_region_name">'+regionMisteryName+'</span>' ;
         
+        console.log("On est dans game 2");
         var divGameInformation = document.getElementById("game_information");
         divGameInformation.innerHTML = codeHTML ;
         
-        let regionMisterySpan = document.getElementById("select_region_name");//Name of the country
-        
         //////////////////////////////////
-        let i = 0;
+        
+    }
+
+    function restarGameTwo(gameEnd) {
+        
+        console.log(gameEnd); 
+        if(gameEnd == true) {
+            console.log(gameEnd);
+            console.log(points);
+            console.log("ok"); 
+            gameTwo();
+        } 
+    }
+    
+
+    function initListenerRegion() {
+        $.each(regions, function() {
+            $(this).click(function () {
+                let regionName = this.id;
+
+                console.log("Region select = " + regionName);
+                
+                verifregion(regionName);
+            });
+        })
+    }
+
+    function verifregion(regionName) {
+
+        if(regionName == regionMisteryName){
+            console.log("well done");
+            window.alert("well done c'est bien " + regionMisteryName);
+            //regions.splice(regionID, 1);
+        }else{
+            console.log("Et merde");
+            window.alert("Et merde ça c'est " + regionName);
+        }
+
+        return gameTwo();
+    }
+
+    ///////////// PARCOURIR LES REGIONS //////////////
+    function parcoursRegion(regions, regionMisterySpan, regionID) {
+        
         for(i = 0; i < regions.length; i++){
             regions[i].addEventListener("click", function() {
                 regionName = regions[i].id;
@@ -193,41 +242,6 @@ $(document).ready(function(){
                 }
             })
         }
-    }
-
-    function restarGameTwo(gameEnd) {
-        if(points < 5 && gameEnd == true) {
-            console.log(gameEnd);
-            console.log(points);
-            console.log("ok"); 
-            return gameTwo();
-        } 
-    }
-    
-    ///////////// PARCOURIR LES REGIONS //////////////
-    function parcoursRegion(regions, regionMisterySpan, regionID) {
-        regions.forEach(region => {
-            region.addEventListener("click", function(){
-                regionName = region.id;
-                //console.log(regionName);
-
-                
-                if(regionName == regionMisterySpan.innerHTML){
-                    console.log("well done");
-                    window.alert("well done c'est bien " + regionMisterySpan.innerHTML);
-                    regions.splice(regionID, 1);
-                     
-                    return gameTwo();
-                    points++;
-                }else{
-                    console.log("Et merde");
-                    window.alert("Et merde ça c'est " + regionName);
-
-                    return gameTwo();
-                    points++;
-                }
-            })
-        })
     }
 
     ///////////// create popup ///////////// 
@@ -268,6 +282,6 @@ $(document).ready(function(){
     if(gameType == 1){
         window.onload = gameOne();
     }else if(gameType == 2){
-        window.onload = gameTwo();
+        window.onload = loadGame();
     }
 });
