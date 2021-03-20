@@ -18,7 +18,7 @@ h1{
     transition: fill 0.3s;
 }
 
-#map .select_land_coloration{
+#map .region_coloration{
     fill: #FF0000;
 }
 

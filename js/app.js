@@ -1,72 +1,18 @@
 $(document).ready(function(){
-    /* initialisation de la fonction initmap */
-    var map;
+    /* Variable */
     var activePopup = false;
-    var points = 0;
-    let regions;//Select all country 
+    var regions;
+    var gameEnd = false;
+    var items = [];
 
-    let regionMisteryName;
-
-    function initmapV3(){
-        map = L.map('map').setView([47.0, 3.0], 6);
-        let link= 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
-        L.tileLayer(link, {
-            maxZoom: 7,
-            minZoom: 5,
-            //attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-            //    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            //id: 'mapbox/dark-v9',
-            tileSize: 512,
-            zoomOffset: -1
-        }).addTo(map);
-    }
-    /* Initialisation de la carte */
-    initmapV3();
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-    /* Creation d'un tableau qui va contenir les donnes des régions*/
-    var tableau = [
-        [45.4695797,    4.4502821,  'Auvergne-Rhone-Alpes'],
-        [47.280513,     4.999437,   'Bourgogne-Franche-Comte'],
-        [48.202047,     -2.932644,  'Bretagne'],
-        [47.499998,     1.749997,   'Centre-Val de Loire'],
-        [42.200604,     9.092893,   'Corse'],
-        [48.580002,     5.950000,   'Grand Est'],
-        [50.047503,     2.363062,   'Haut de france'],
-        [48.999870,     0.171253,   'Normandie'],
-        [48.7099198,    2.6000411,  'Ile-De-France'],
-        [45.399044,     0.2995785,   'Nouvelle-Aquitaine'],
-        [43.545911,     1.998862,    'Occitanie'],
-        [47.7632836,    -0.3299687, 'Pays de la loire'],
-        [43.9351691,    6.0679194,  "Provence-Alpes-Cote D'Azur"] 
-    ];
-
-    /* On boucle sur le tableau pour y placer les points */
-    for (i = 0; i < tableau.length; i++) {
-                
-        var regionName = tableau[i][2];
-        /*
-        * On va creer un cercle sur la carte pour chaque point
-        */
-        var circleLocation = new L.LatLng(tableau[i][0], tableau[i][1]),
-        circleOptions = {
-            id: regionName,
-        };
-        
-        // on ajoute le cercle a la carte
-        var circle = new L.Circle(circleLocation, 20000, circleOptions);
-        map.addLayer(circle);
-
-        // on ajoute une class et un id au path du svg
-        circle._container.firstElementChild.classList.add("region");
-        circle._container.firstElementChild.id = regionName;
-        
-        //console.log(circle)
-    }
-/////////////////////////////////////////////////////////////////////////////////////////////
-    
+    // Get parametre pour recuperer le type de jeu
+    var url =  window.location.href;
+    var newUrl = new URL(url);
+    var gameType = newUrl.searchParams.get("gameType");
+    window.onload = loadGame()
     
 /////////////////////////////////////////////////////////////////////////////////////////////
+//Parametre general
     ////////////// GET RANDOM NUMBER //////////////
     function getRandomInt(max) {
         return Math.floor(Math.random() * Math.floor(max));
@@ -74,28 +20,67 @@ $(document).ready(function(){
 
     ////////////// SELECT ALL REGIONS //////////////
     function getAllRegion(){
-        let regions = document.getElementsByClassName("region");
-        let regionTab = new Array();
+        let r = document.getElementsByClassName("region");
+        let tab = new Array();
 
-        for(let i=0; i < regions.length; ++i){
-            regionTab.push(regions[i]);
+        for(let i=0; i < r.length; ++i){
+            tab.push(r[i]);
         }
 
-        return regionTab;
+        return tab;
+    }
+
+
+    ////////////// LOAD THE GAME //////////////
+    function loadGame() {
+        regions = getAllRegion(); //Select all country 
+
+        if(gameType == 1){
+            gameOne();
+        }else {
+            initListenerRegion();
+            gameTwo();
+        }
     }
     
-    ////////////// GET REGION BY ID//////////////
-    function getRegion(regionTab, idRegion){
-        return regionTab[idRegion];
+    ////////////// LOAD THE GAME OR GO TO THE MENU //////////////
+    function endGameReload() {
+        if(regions.length <= 0) {
+            window.alert("GG fin du jeu");
+            regions = getAllRegion();
+            var awser = confirm("Voulez vous rejouer ?");
+            if (awser == true) {
+                if(gameType == 1) {
+                    gameOne()
+                } else {
+                    gameTwo()
+                }
+            } else {
+                newUrl = "change.html"
+                document.location.href = newUrl;
+            }
+        }
     }
-   
-    ////////////// FIND REGION'S NAME //////////////
-    function gameOne() {
-        let regions = getAllRegion();//Select all country 
-        let regionID = getRandomInt(regions.length);//Random number
+    // loading JSON file (scriptJs.json)
+    $.getJSON( "assets/scriptJs.json", function( data ) {
+        let tab = [];
+        tab.push(data["region"]);
+        tab = tab[0];
 
-        //Selected country informations
-        let regionMistery = getRegion(regions, regionID);
+        for(var i in tab) {
+            items.push(tab[i]);
+        }
+
+    });
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////// Game 1 //////////////
+    ////////////// FIND REGION'S NAME //////////////
+    function gameOne() {   
+        let IndexRegion = getRandomInt(regions.length); //Random number
+
+        //Selected region informations
+        let regionMistery = regions[IndexRegion];
         let regionMisteryName = regionMistery.id;
 
         /////// Game information ///////
@@ -104,60 +89,77 @@ $(document).ready(function(){
                     '<input type="text" name="player_answer" id="player_answer" required>' +
                     '<input type="submit" id="answer_btn" value="confirm">' ;
         
-        var divGameInformation = document.getElementById("game_information");
-        divGameInformation.innerHTML = codeHTML ;
+        //var divGameInformation = document.getElementById("game_information");
+        $("#game_information").html(codeHTML);
         
-        let player_answer = document.getElementById("player_answer");//Name of the country
-        //////////////////////////////////
+        let player_answer = $("#player_answer");//Name of the country
 
-        //Test
-        //console.log(regionMistery);
-        //console.log(player_answer);
-
-        regionMistery.classList.add("select_land_coloration");//Add color to the select country
+        regionMistery.classList.add("region_coloration");//Add color to the select country
         
         //Test
         console.log("Region = " + regionMisteryName);
-        document.getElementById("answer_btn").addEventListener("click", function(){        
-            if(player_answer.value == regionMisteryName){
-                window.alert("Congratulation meennn!! I gat you!  Minimum 3! It's " + regionMisteryName);
-                regions.splice(regionID, 1);
-                regionMistery.classList.remove("select_land_coloration");
+        
+        $("#answer_btn").on("click", function(){        
+            if(player_answer.val() == regionMisteryName){
+                window.alert("Bravo, c'est bien " + regionMisteryName);
+                regions.splice(IndexRegion, 1);
+                regionMistery.classList.remove("region_coloration");
                 
                 //Active popub avec les info de la region
                 activePopup = true;
                 addPopup(regionMisteryName);
-                
-                if(points < 5) {
-                    gameOne();
-                    points++;
-                }
             }else{
-                window.alert("Zebi, It's " + regionMisteryName);
-                regionMistery.classList.remove("select_land_coloration");
-
-                if(points < 5) {    
-                    gameOne();
-                }
+                window.alert("Mais non, c'etait " + regionMisteryName);
+                regionMistery.classList.remove("region_coloration");
             }
-            if (points >= 5) {
-                points = 0;
+            gameEnd = true;
+
+            if(gameEnd == true & regions.length > 0) {
+                gameOne();
+            }else {
+                endGameReload();
             }
         })
     }
+    ////////////// Fin Game 1 //////////////
+
     
-    function loadGame() {
-        regions = getAllRegion();
-        initListenerRegion();
-        gameTwo();
+    ////////////// Game 2 //////////////
+    // Init le click event sur les regions
+    function initListenerRegion() {
+        $.each(regions, function() {
+            $(this).click(function () {
+                let regionName = this.id;
+
+                console.log("Region select = " + regionName);  
+                verifregion(regionName);
+            });
+        })
     }
 
-    ////////////// FIND REGION POSITION //////////////
+    // Verifie si la c'est le bon pays qui a ete trouve
+    function verifregion(regionName) {
+        if(regionName == regionMisteryName){
+            window.alert("Bravo, c'est bien " + regionMisteryName);
+            regions.splice(regionMisteryName, 1);
+            addPopup(regionMisteryName);
+        }else{
+            window.alert("Mais non, c'etait " + regionName);
+        }
+
+        if(regions.length > 0) {
+            gameTwo();
+        }else {
+            endGameReload();
+        }
+    }
+
+    // FIND REGION POSITION
     function gameTwo() {
-        let regionID = getRandomInt(regions.length);//Random number
+        let regionIndex = getRandomInt(regions.length);//Random number
 
         //Selected country informations
-        let regionMistery = regions[regionID];
+        let regionMistery = regions[regionIndex];
         regionMisteryName = regionMistery.id;
 
         /////// Game information ///////
@@ -165,87 +167,15 @@ $(document).ready(function(){
         codeHTML =  '<h3 id="region_question">Where is this region ?</h3>' +
                     '<span id="select_region_name">'+regionMisteryName+'</span>' ;
         
-        console.log("On est dans game 2");
         var divGameInformation = document.getElementById("game_information");
         divGameInformation.innerHTML = codeHTML ;
         
-        //////////////////////////////////
-        
     }
+    ////////////// Fin Game 2 //////////////
 
-    function restarGameTwo(gameEnd) {
-        
-        console.log(gameEnd); 
-        if(gameEnd == true) {
-            console.log(gameEnd);
-            console.log(points);
-            console.log("ok"); 
-            gameTwo();
-        } 
-    }
-    
-
-    function initListenerRegion() {
-        $.each(regions, function() {
-            $(this).click(function () {
-                let regionName = this.id;
-
-                console.log("Region select = " + regionName);
-                
-                verifregion(regionName);
-            });
-        })
-    }
-
-    function verifregion(regionName) {
-
-        if(regionName == regionMisteryName){
-            console.log("well done");
-            window.alert("well done c'est bien " + regionMisteryName);
-            //regions.splice(regionID, 1);
-        }else{
-            console.log("Et merde");
-            window.alert("Et merde ça c'est " + regionName);
-        }
-
-        return gameTwo();
-    }
-
-    ///////////// PARCOURIR LES REGIONS //////////////
-    function parcoursRegion(regions, regionMisterySpan, regionID) {
-        
-        for(i = 0; i < regions.length; i++){
-            regions[i].addEventListener("click", function() {
-                regionName = regions[i].id;
-                //console.log(regionName);
-                
-                if(regionName == regionMisterySpan.innerHTML){
-                    console.log("well done");
-                    window.alert("well done c'est bien " + regionMisterySpan.innerHTML);
-                    regions.splice(regionID, 1);    
-                    points++;
-
-                    //Active popub avec les info de la region
-                    activePopup = true;
-                    addPopup(regionMisteryName);
-
-                    gameEnd = true;
-                }
-                else{
-                    console.log("Et merde");
-                    window.alert("Et merde ça c'est " + regionName);
-                    gameEnd = true;
-                }
-                console.log("Valeur : " + i);
-                if (gameEnd == true && i >= regions.length){          
-                    restarGameTwo(gameEnd)
-                }
-            })
-        }
-    }
 
     ///////////// create popup ///////////// 
-    function addPopup(idRegion) {
+    function addPopup(indexRegion) {
         // Get the popup
         let popup = document.getElementById("myPopup");
 
@@ -258,6 +188,15 @@ $(document).ready(function(){
         // When the user clicks the button, open the popup 
         if(activePopup == true) {
             popup.style.display = "block";
+
+            $.each(items, function() {
+                if(this["nom"] == indexRegion) {    
+                    $("#popup-title").text(this["nom"]);
+                    $("#popup-body-superficie").text(this["Superficie"]);
+                    $("#popup-body-population").text(this["population"]);
+                    $("#popup-body-description").text(this["description"]);
+                }
+            });
         }
 
         // When the user clicks on <span> (x), close the popup
@@ -272,16 +211,5 @@ $(document).ready(function(){
             }
         }
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    
-
-    let url =  window.location.href;
-    let newUrl = new URL(url);
-    let gameType = newUrl.searchParams.get("gameType");
-
-    if(gameType == 1){
-        window.onload = gameOne();
-    }else if(gameType == 2){
-        window.onload = loadGame();
-    }
+   
 });
