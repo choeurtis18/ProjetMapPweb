@@ -4,6 +4,21 @@ $(document).ready(function(){
     var regions;
     var gameEnd = false;
     var items = [];
+    var listeRegion = [
+        'Auvergne-Rhone-Alpes',
+        'Bourgogne-Franche-Comte',
+        'Bretagne',
+        'Centre-Val-de-Loire',
+        'Corse',
+        'Grand-Est',
+        'Haut-de-france',
+        'Normandie',
+        'Ile-De-France',
+        'Nouvelle-Aquitaine',
+        'Occitanie',
+        'Pays-de-la-loire',
+        "Provence-Alpes-Cote-D-Azur"
+    ];
 
     // Get parametre pour recuperer le type de jeu
     var url =  window.location.href;
@@ -29,7 +44,6 @@ $(document).ready(function(){
 
         return tab;
     }
-
 
     ////////////// LOAD THE GAME //////////////
     function loadGame() {
@@ -61,6 +75,7 @@ $(document).ready(function(){
             }
         }
     }
+
     // loading JSON file (scriptJs.json)
     $.getJSON( "assets/scriptJs.json", function( data ) {
         let tab = [];
@@ -75,6 +90,15 @@ $(document).ready(function(){
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     ////////////// Game 1 //////////////
+    ////////////// Init liste regions //////////////
+    function initListeRagion() {
+        for(let i = 0; i < listeRegion.length; i++){
+            $(".flex-region-container").append("<div>" +
+                                                listeRegion[i]+
+                                                "</div>");
+        }
+    }
+    
     ////////////// FIND REGION'S NAME //////////////
     function gameOne() {   
         let IndexRegion = getRandomInt(regions.length); //Random number
@@ -91,7 +115,7 @@ $(document).ready(function(){
         
         //var divGameInformation = document.getElementById("game_information");
         $("#game_information").html(codeHTML);
-        
+        initListeRagion() ;
         let player_answer = $("#player_answer");//Name of the country
 
         regionMistery.classList.add("region_coloration");//Add color to the select country
@@ -195,6 +219,10 @@ $(document).ready(function(){
                     $("#popup-body-superficie").text(this["Superficie"]);
                     $("#popup-body-population").text(this["population"]);
                     $("#popup-body-description").text(this["description"]);
+
+                    let imageUrl = "../img/"+this["nom"]+".png";
+                    $("#popup-img-div").css("background-image", "url(" + imageUrl + ")");
+                    console.log($("#popup-img-div").css("background-image")); 
                 }
             });
         }
