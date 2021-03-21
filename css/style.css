@@ -162,6 +162,20 @@ span {
     color: #0e0e0e;
 }
 
+.flex-region-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+.flex-region-container > div {
+    background-color: #D0CFD4;
+    width: 150px;
+    margin: 10px;
+    padding: 5px;
+    text-align: center;
+    font-size: 15x;
+}
+
 #map path{
     fill: #000000;
     stroke: #FFFFFF;
@@ -243,11 +257,11 @@ span {
     color: #fefefe;
 }
 
-.popup-img{
+.popup-img #popup-img-div{
     padding: 2px 16px;
     color: #fefefe;
-    background-image: url(../img/Auvergne-Rhone-Alpes.png); /*pour tester*/
     height: 200px;
+    background-size: cover;
 }
 
 .popup-body {
