@@ -17,15 +17,19 @@
         <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
-        
-        <h1>Find the region</h1>
-        
-        <div id="map" style="height:100vh;">
+        <div class="container">
+            <div class="header">
+                <h1> <a href="./change.html">FIND THE REGION</a></h1>
+                
+                <div id="game_information">
+                </div>
+            </div>
+            <div id="map" style="height:100vh; width: 80%; margin: auto; border: 5px solid #fefefe;">
+            </div>
         </div>
 
         <!--Display game parameter-->
-        <div id="game_information">
-        </div>
+        
 
         <!-- The Popup -->
         <div id="myPopup" class="popup">
@@ -33,23 +37,23 @@
             <div class="popup-content">
                 <div class="popup-header">
                     <span class="popup-close">&times;</span>
-                    <h2 id="popup-title">Region</h2>
+                    <h2 id="popup-title">REGION</h2>
                 </div>  
                 <div class="popup-img">
                     <div id="popup-img-div"></div>
                 </div>
                 <div class="popup-body">
                     <div>
-                        <h4>Superficie</h4>
+                        <h4>Superficie : </h4>
                         <p id="popup-body-superficie">Superficie</p>
                     </div>
                     <div>
-                        <h4>Nombre habitant</h4>
+                        <h4>Nombre habitants : </h4>
                         <p id="popup-body-population">Nombre habitant</p>
                     </div>
                     <div>
                         <h4>Description : </h4>
-                        <p id="popup-body-description">Description : </p>
+                        <p id="popup-body-description">Description</p>
                     </div>
                 </div>
             </div>

@@ -85,9 +85,9 @@ $(document).ready(function(){
 
         /////// Game information ///////
         var codeHTML;
-        codeHTML =  '<h3 id="region_question">Where is this region</h3>' +
-                    '<input type="text" name="player_answer" id="player_answer" required>' +
-                    '<input type="submit" id="answer_btn" value="confirm">' ;
+        codeHTML =  '<h3 id="region_question">Where is this region ?</h3>' +
+                    '<input class="answer-input" type="text" name="player_answer" id="player_answer" required>' +
+                    '<input class="answer-btn" type="submit" id="answer_btn" value="Confirm">' ;
         
         //var divGameInformation = document.getElementById("game_information");
         $("#game_information").html(codeHTML);

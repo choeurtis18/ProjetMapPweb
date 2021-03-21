@@ -1,7 +1,165 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    background-color: #0e0e0e;
+}
+
+/* Menu Titles */ 
+
 h1{
+    margin: 0;
+    font-size: 30px;
+    color: #fefefe;
+    width: 100%;
     text-align: center;
-    margin: 2%;
-    font-size: 50px;
+    padding: 10px 0;
+}
+
+h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #f7f7f7;
+    width: 100%;
+    text-align: center;
+}
+
+/* Les flip Cards du Menu */
+
+.wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.flipCard {
+    width: 340px;
+    height: 450px;
+    background-color: transparent;
+    perspective: 1000px;
+    margin: 30px 30px 0;
+    padding: 1px;
+}
+
+.flipCardInner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: 1000ms;
+    transform-style: preserve-3d;
+}
+
+.flipCardFront, .flipCardBack {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+.flipCardFront h3 {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 43%;
+    left: 29%;
+    font-size: 36px;
+    color: #fefefe;
+}
+
+.flipCardBack {
+    padding: 30px 15px;
+    color: #0e0e0e;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    transform: rotateY(180deg);
+    text-align: center;
+}
+
+.flipCard:hover .flipCardInner {
+    transform: rotateY(180deg);
+}
+
+.flipCardBack h3 {
+    font-size: 25px;
+    font-weight: bold;
+    margin: 5px auto;
+    color: #0e0e0e;
+    padding: 4px 0;
+}
+
+h4 {
+    margin: 5px 0;
+    font-size: 20px;
+    padding: 4px 0 0;
+}
+
+p {
+    text-align: justify;
+}
+
+button {
+    font-size: 17px;
+    background-color: #0e0e0e;
+    color: #fefefe;
+    border: none;
+    padding: 6px 20px;
+    margin-top: 10px;
+}
+
+/* The Map page */
+
+.container {
+    width: 100%;
+    text-align: center;
+}
+
+.header {
+    padding: 100px 20px;
+}
+
+.header h1 {
+    font-size: 40px;
+}
+
+h1 a {
+    text-decoration: none;
+    color: #fefefe;
+}
+
+.container h3 {
+    color: #fefefe;
+    font-size: 22px;
+}
+
+span {
+    color: #fefefe;
+    font-size: 20px;
+    padding: 8px 12px;
+    border: 1px solid #fefefe;
+}
+
+.answer-input {
+    width: 35%;
+    padding: 4px 0;
+    margin-right: 10px;
+}
+
+.answer-btn {
+    width: 20%;
+    padding: 4px 5px;
+    font-size: 16px;
+    border: 1px solid #fefefe;
+    background-color: transparent;
+    color: #fefefe;
+}
+
+.answer-btn:hover {
+    padding: 5px 0;
+    border: none;
+    background-color: #fefefe;
+    color: #0e0e0e;
 }
 
 #map path{
@@ -21,7 +179,6 @@ h1{
 #map .region_coloration{
     fill: #FF0000;
 }
-
 
 
 /*Popup style*/
@@ -47,7 +204,7 @@ h1{
     margin: auto;
     padding: 0;
     border: 1px solid #888;
-    width: 80%;
+    width: 40%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;
@@ -68,28 +225,29 @@ h1{
   
 /* The Close Button */
 .popup-close {
-    color: white;
+    color: #fefefe;
     float: right;
-    font-size: 28px;
     font-weight: bold;
+    padding: 0 10px;
 }
 
 .popup-close:hover, .popup-close:focus {
-    color: #000;
+    color: #ebebeb;
     text-decoration: none;
     cursor: pointer;
 }
 
 .popup-header {
-    padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
+    padding: 4px 16px;
+    background-color: #0e0e0e;
+    color: #fefefe;
 }
 
 .popup-img{
     padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
+    color: #fefefe;
+    background-image: url(../img/Auvergne-Rhone-Alpes.png); /*pour tester*/
+    height: 200px;
 }
 
 .popup-body {
