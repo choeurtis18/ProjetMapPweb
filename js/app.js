@@ -45,6 +45,17 @@ $(document).ready(function(){
         return tab;
     }
 
+    function getRegionIndex(regionName) {
+        let index;
+        for (let i = 0; i < regions.length; i++) {
+            if(regions[i] == regionName){
+                index = i;
+            }
+        }
+
+        console.log(regions);
+        return index;
+    }
     ////////////// LOAD THE GAME //////////////
     function loadGame() {
         regions = getAllRegion(); //Select all country 
@@ -77,7 +88,7 @@ $(document).ready(function(){
     }
 
     // loading JSON file (scriptJs.json)
-    $.getJSON( "assets/scriptJs.json", function( data ) {
+    $.getJSON( "../assets/scriptJs.json", function( data ) {
         let tab = [];
         tab.push(data["region"]);
         tab = tab[0];
@@ -92,11 +103,11 @@ $(document).ready(function(){
     ////////////// Game 1 //////////////
     ////////////// Init liste regions //////////////
     function initListeRagion() {
+        var codeHTMList="";
         for(let i = 0; i < listeRegion.length; i++){
-            $(".flex-region-container").append("<div>" +
-                                                listeRegion[i]+
-                                                "</div>");
+            codeHTMList += "<div>" +listeRegion[i]+"</div>";
         }
+        return codeHTMList;
     }
     
     ////////////// FIND REGION'S NAME //////////////
@@ -115,9 +126,11 @@ $(document).ready(function(){
         
         //var divGameInformation = document.getElementById("game_information");
         $("#game_information").html(codeHTML);
-        initListeRagion() ;
+        $(".flex-region-container").html(initListeRagion());
+
         let player_answer = $("#player_answer");//Name of the country
 
+        
         regionMistery.classList.add("region_coloration");//Add color to the select country
         
         //Test
@@ -165,7 +178,12 @@ $(document).ready(function(){
     function verifregion(regionName) {
         if(regionName == regionMisteryName){
             window.alert("Bravo, c'est bien " + regionMisteryName);
-            regions.splice(regionMisteryName, 1);
+
+            let indexRegion = getRegionIndex(regionName);
+            regions.splice(indexRegion, 1);
+
+            //Active popub avec les info de la region
+            activePopup = true;
             addPopup(regionMisteryName);
         }else{
             window.alert("Mais non, c'etait " + regionName);
@@ -208,11 +226,11 @@ $(document).ready(function(){
 
         // Get the <span> element that closes the popup
         var spanClose = document.getElementsByClassName("popup-close")[0];
-
+        
         // When the user clicks the button, open the popup 
         if(activePopup == true) {
             popup.style.display = "block";
-
+            
             $.each(items, function() {
                 if(this["nom"] == indexRegion) {    
                     $("#popup-title").text(this["nom"]);
