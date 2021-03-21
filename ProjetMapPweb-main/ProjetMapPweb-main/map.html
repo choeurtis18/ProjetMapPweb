@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Find the region</title>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css" />
+        <script src="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>   
+        <!--Import GEIJSON extention-->
+        <script type="module">
+            import { IndefiniteObservable } from "https://ajax.googleapis.com/ajax/libs/indefinite-observable/2.0.1/indefinite-observable.bundle.js";
+        </script>
+
+        <!--Local inports-->
+        <script src="js/loadMap.js" type="text/javascript"></script>
+        <script src="js/app.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1> <a href="./change.html">FIND THE REGION</a></h1>
+                
+                <div id="game_information">
+                </div>
+            </div>
+            <div id="map" style="height:100vh; width: 80%; margin: auto; border: 5px solid #fefefe;">
+            </div>
+        </div>
+
+        <!--Display game parameter-->
+        
+
+        <!-- The Popup -->
+        <div id="myPopup" class="popup">
+            <!-- Popup content -->
+            <div class="popup-content">
+                <div class="popup-header">
+                    <span class="popup-close">&times;</span>
+                    <h2 id="popup-title">REGION</h2>
+                </div>  
+                <div class="popup-img">
+                    <div id="popup-img-div"></div>
+                </div>
+                <div class="popup-body">
+                    <div>
+                        <h4>Superficie : </h4>
+                        <p id="popup-body-superficie">Superficie</p>
+                    </div>
+                    <div>
+                        <h4>Nombre habitants : </h4>
+                        <p id="popup-body-population">Nombre habitant</p>
+                    </div>
+                    <div>
+                        <h4>Description : </h4>
+                        <p id="popup-body-description">Description</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
