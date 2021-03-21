@@ -6,8 +6,8 @@ $(document).ready(function(){
         map = L.map('map').setView([47.0, 3.0], 6);
         let link = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
         L.tileLayer(link, {
-            maxZoom: 7,
-            minZoom: 5,
+            maxZoom: 6,
+            minZoom: 6,
             tileSize: 512,
             zoomOffset: -1
             
